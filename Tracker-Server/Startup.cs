@@ -29,7 +29,7 @@ namespace Tracker_Server
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("https://localhost:44354"); //might need to change origin port
+                    builder.WithOrigins("https://localhost:44387"); 
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
                 });
