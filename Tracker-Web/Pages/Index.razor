@@ -1,7 +1,58 @@
 ﻿@page "/"
+@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+<h1>Tracker</h1>
 
-Welcome to your new app.
+<div class="card">
+    <div class="card-header">
+        <h3>Placeholder register:</h3>
+    </div>
+    <div class="card_body">
+        <EditForm Model=@userInfo OnValidSubmit=@Register>
+            <InputText class="form-control" @bind-Value="userInfo.Username" />
+            <InputText class="form-control" @bind-Value="userInfo.Email" />
+            <InputText class="form-control" @bind-Value="userInfo.Password" />
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+            <button class="btn-secondary" style="margin-top : 1em">Register</button>
+        </EditForm>
+    </div>
+</div>
+
+
+@code
+{
+    private class regInfo
+    {
+        public string Email { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+    private regInfo userInfo = new regInfo()
+    {
+        Email = "",
+        Username = "",
+        Password = ""
+    };
+
+    private async Task Register()
+    {
+        if (userInfo == null ||
+            userInfo.Email == "" ||
+            userInfo.Username == "" ||
+            userInfo.Password == "")
+        {
+            return;
+        }
+
+        var requestMsg = new HttpRequestMessage()
+        {
+            Method = new HttpMethod("POST"),
+            RequestUri = new Uri("https://localhost:44391/api/authorization"),
+            Content = JsonContent.Create(userInfo)
+        };
+
+        await Http.SendAsync(requestMsg);
+    }
+
+}

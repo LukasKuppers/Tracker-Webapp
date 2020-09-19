@@ -48,7 +48,6 @@ namespace Tracker_Server.Controllers
             }
         }
 
-        [Route("/register")]
         [HttpPost]
         public ActionResult Register(PostRegIn regInfo)
         {
