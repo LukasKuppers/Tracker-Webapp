@@ -67,7 +67,7 @@ namespace Tracker_Server.Controllers
                 return BadRequest();
             }
 
-            // at some point we'll want to to passowrd validation
+            // at some point we'll want to add passowrd validation
 
             IDbClient db = new DbClient("tracker");
             if (db.Contains<User, string>("users", "Email", regInfo.Email))
