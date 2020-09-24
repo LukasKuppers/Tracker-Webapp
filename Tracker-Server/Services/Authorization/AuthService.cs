@@ -44,10 +44,33 @@ namespace Tracker_Server.Services.Authorization
         {
             // check if a user with the provided email exists
             var db = new DbClient("tracker");
-            if (db.Contains<User, string>("users", "Credentials", email))
+            if (db.Contains<User, string>("users", "Email", email))
             {
+                List<User> users = db.FindByField<User, string>("users", "Email", email);
+                if (users.Count > 1)
+                {
+                    return Guid.Empty;   // we'll handle errors when we implement unit tests
+                }
 
+                User user = users[0];
+
+                // check if the user already has an existing session
+                if (db.Contains<Session, Guid>("sessions", "UserId", user.Id))
+                {
+                    Session session = db.FindByField<Session, Guid>("sessions", "UserId", user.Id)[0];
+                    return session.Id;
+                }
+
+                // create a new user session
+                Session newSession = new Session()
+                {
+                    Id = new Guid(),
+                    UserId = user.Id
+                };
+                db.InsertRecord("sessions", newSession);
+                return newSession.Id;
             }
+            return Guid.Empty;
         }
     }
 }
