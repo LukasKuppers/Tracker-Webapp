@@ -30,8 +30,9 @@ example output:
 - **401** if the given login credentials are not valid
 - **200** if the given login credentials are valid
 
-`POST /api/authorization/register`
+`POST /api/authorization`
 
+Allows user to register new account
 Accepts a JSON body in the form:
 ```
 {
