@@ -21,6 +21,7 @@ namespace Tracker_Server.Services.Authorization
                     return false;   // we'll handle errors when we implement unit tests
                 }
 
+                // check if password is correct
                 User user = users[0];
                 IHashManager hashManager = new HashManager();
 
@@ -37,10 +38,16 @@ namespace Tracker_Server.Services.Authorization
             return false;
         }
 
-        // users not yet implemented
+        // create a user session in the sessions table (a ID paired with a user ID)
+        // for reference: users in this table are logged in, given they provide the correct sessionID
         public Guid CreateSession(string email)
         {
-            return Guid.Empty;
+            // check if a user with the provided email exists
+            var db = new DbClient("tracker");
+            if (db.Contains<User, string>("users", "Credentials", email))
+            {
+
+            }
         }
     }
 }

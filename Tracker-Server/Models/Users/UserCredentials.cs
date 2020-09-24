@@ -7,8 +7,6 @@ namespace Tracker_Server.Models.Users
 {
     public class UserCredentials
     {
-        public string Email { get; set; }
-
         public Guid PwdSalt { get; set; }
 
         public string PwdHash { get; set; }
