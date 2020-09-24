@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tracker_Server.Services.Authorization
 {
+    // requires creation of password auth service
     interface IAuthService
     {
         public bool IsValidUser(string email, string password);
