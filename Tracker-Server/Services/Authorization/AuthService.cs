@@ -30,10 +30,6 @@ namespace Tracker_Server.Services.Authorization
                 {
                     return true; 
                 }
-                else
-                {
-                    return false;
-                }
             }
             return false;
         }
