@@ -1,0 +1,4 @@
+{
+  "db_base_path": "tracker",
+  "db_users_path": "users"
+}
