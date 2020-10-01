@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tracker_Server.Models.Users;
+using Tracker_Server.Services.Constants;
 using Tracker_Server.Services.DataAccess;
 
 namespace Tracker_Server.Services.Authorization
@@ -12,10 +13,11 @@ namespace Tracker_Server.Services.Authorization
         public bool IsValidUser(string email, string password)
         {
             // check if a user with the given email exists
-            var db = new DbClient("tracker");
-            if (db.Contains<User, string>("users", "Email", email))
+            var db = new DbClient(Resource.getString("db_base_path"));
+            if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", email))
             {
-                List<User> users = db.FindByField<User, string>("users", "Email", email);
+                List<User> users = db.FindByField<User, string>(Resource.getString("db_users_path"), 
+                    "Email", email);
                 if (users.Count > 1)
                 {
                     return false;   // we'll handle errors when we implement unit tests
@@ -43,10 +45,11 @@ namespace Tracker_Server.Services.Authorization
         public Guid CreateSession(string email)
         {
             // check if a user with the provided email exists
-            var db = new DbClient("tracker");
-            if (db.Contains<User, string>("users", "Email", email))
+            var db = new DbClient(Resource.getString("db_base_path"));
+            if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", email))
             {
-                List<User> users = db.FindByField<User, string>("users", "Email", email);
+                List<User> users = db.FindByField<User, string>(Resource.getString("db_users_path"), 
+                    "Email", email);
                 if (users.Count > 1)
                 {
                     return Guid.Empty;   // we'll handle errors when we implement unit tests
@@ -55,9 +58,11 @@ namespace Tracker_Server.Services.Authorization
                 User user = users[0];
 
                 // check if the user already has an existing session
-                if (db.Contains<Session, Guid>("sessions", "UserId", user.Id))
+                if (db.Contains<Session, Guid>(Resource.getString("db_sessions_path"), 
+                    "UserId", user.Id))
                 {
-                    Session session = db.FindByField<Session, Guid>("sessions", "UserId", user.Id)[0];
+                    Session session = db.FindByField<Session, Guid>(Resource.getString("db_sessions_path"), 
+                        "UserId", user.Id)[0];
                     return session.Id;
                 }
 
@@ -67,7 +72,7 @@ namespace Tracker_Server.Services.Authorization
                     Id = new Guid(),
                     UserId = user.Id
                 };
-                db.InsertRecord("sessions", newSession);
+                db.InsertRecord(Resource.getString("db_sessions_path"), newSession);
                 return newSession.Id;
             }
             return Guid.Empty;

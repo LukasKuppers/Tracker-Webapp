@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Tracker_Server.Services.Constants
 {
     // handle retrieval of constants from systemConstants.resx
-    public class Constants
+    public class Resource
     {
         private static readonly string RESOURCE_PATH = "Tracker-Server.Resources.SystemConstants.json";
 

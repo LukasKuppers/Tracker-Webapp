@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tracker_Server.Models.Authorization;
 using Tracker_Server.Models.Users;
 using Tracker_Server.Services.Authorization;
+using Tracker_Server.Services.Constants;
 using Tracker_Server.Services.DataAccess;
 
 namespace Tracker_Server.Controllers
@@ -68,8 +68,8 @@ namespace Tracker_Server.Controllers
 
             // at some point we'll want to add passowrd validation
 
-            IDbClient db = new DbClient("tracker");
-            if (db.Contains<User, string>("users", "Email", regInfo.Email))
+            IDbClient db = new DbClient(Resource.getString("db_base_path"));
+            if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", regInfo.Email))
             {
                 return Conflict();
             }
@@ -77,16 +77,16 @@ namespace Tracker_Server.Controllers
             User newUser = new User()
             {
                 Id = new Guid(),
+                Email = regInfo.Email, 
                 Credentials = new UserCredentials()
                 {
-                    Email = regInfo.Email,
                     PwdSalt = Guid.Empty,
                     PwdHash = ""
                 },
                 Username = regInfo.Username,
                 Projects = new List<Guid>()
             };
-            db.InsertRecord("users", newUser);
+            db.InsertRecord(Resource.getString("db_users_path"), newUser);
             return CreatedAtAction("Register", regInfo);
         }
     }
