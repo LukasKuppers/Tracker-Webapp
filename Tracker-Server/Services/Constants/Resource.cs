@@ -7,7 +7,7 @@ namespace Tracker_Server.Services.Constants
     // handle retrieval of constants from systemConstants.resx
     public class Resource
     {
-        private static readonly string RESOURCE_PATH = "Tracker-Server.Resources.SystemConstants.json";
+        private static readonly string RESOURCE_PATH = "Tracker_Server.Resources.SystemConstants.json";
 
         private static JObject getJson()
         {
@@ -24,6 +24,10 @@ namespace Tracker_Server.Services.Constants
         public static string getString(string key)
         {
             JObject data = getJson();
+            if (!data.ContainsKey(key))
+            {
+                throw new System.ArgumentException("Resources does not contain value for key: " + key);
+            }
             return (string)data[key];
         }
     }

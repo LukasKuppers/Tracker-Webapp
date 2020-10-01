@@ -66,7 +66,7 @@ namespace Tracker_Server.Controllers
                 return BadRequest();
             }
 
-            // at some point we'll want to add passowrd validation
+            // at some point we'll want to validate inputs (beyond not null)
 
             IDbClient db = new DbClient(Resource.getString("db_base_path"));
             if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", regInfo.Email))
@@ -74,15 +74,20 @@ namespace Tracker_Server.Controllers
                 return Conflict();
             }
 
+            IHashManager hashManager = new HashManager();
+            Guid salt = new Guid();
+            string hash = hashManager.GetHash(salt.ToString(), regInfo.Password, 0);
+            UserCredentials credentials = new UserCredentials()
+            {
+                PwdSalt = salt,
+                PwdHash = hash
+            };
+
             User newUser = new User()
             {
                 Id = new Guid(),
                 Email = regInfo.Email, 
-                Credentials = new UserCredentials()
-                {
-                    PwdSalt = Guid.Empty,
-                    PwdHash = ""
-                },
+                Credentials = credentials, 
                 Username = regInfo.Username,
                 Projects = new List<Guid>()
             };
