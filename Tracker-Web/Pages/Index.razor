@@ -15,6 +15,7 @@
 
             <button class="btn-secondary" style="margin-top : 1em">Register</button>
         </EditForm>
+        <button class="btn-secondary" @onclick="Login">Login</button>
     </div>
 </div>
 
@@ -28,12 +29,43 @@
         public string Password { get; set; }
     }
 
+    private class loginInfo
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
     private regInfo userInfo = new regInfo()
     {
         Email = "",
         Username = "",
         Password = ""
     };
+
+    private async Task Login()
+    {
+        if (userInfo == null ||
+            userInfo.Email == "" ||
+            userInfo.Password == "")
+        {
+            return;
+        }
+
+        loginInfo info = new loginInfo()
+        {
+            Email = userInfo.Email,
+            Password = userInfo.Password
+        };
+
+        var requestMsg = new HttpRequestMessage()
+        {
+            Method = new HttpMethod("PUT"),
+            RequestUri = new Uri("https://localhost:44391/api/authorization"),
+            Content = JsonContent.Create(info)
+        };
+
+        await Http.SendAsync(requestMsg);
+    }
 
     private async Task Register()
     {
