@@ -30,6 +30,7 @@ example output:
 - **401** if the given login credentials are not valid
 - **200** if the given login credentials are valid
 
+___
 `POST /api/authorization`
 
 Allows user to register new account
@@ -51,3 +52,29 @@ If the request is successful, it will return the same JSON body as in the reques
 - **400** if any of the provided fields are empty
 - **409** if a user with the specified Email Address already exists
 - **201** if the registration was successful
+
+### Projects API:
+`GET /api/projects/{projectId}`
+
+Get a specific project by its Id. The user must own the project or be a member of the project.
+Does not require a JSON body.
+
+Example output for a valid request:
+```
+{
+	"Id": "7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
+	"Title": "My Project", 
+	"DateCreated": "01/10/2020", 
+	"Owner": "Melissa", 
+	"Members": [], 
+	"Tasks": []
+}
+```
+
+The `Members` and `Tasks` properties should be lists containing user ID's and task ID's, respectively.
+
+#### Response Codes:
+- **400** if the given projectID is empty or malformed
+- **403** if the user is not the owner or a member of the project
+- **404** if the no project exists with the given projectId
+- **401** if the user is not logged in
