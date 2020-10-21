@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tracker_Server.Services.Authorization
 {
-    interface IHashManager
+    public interface IHashManager
     {
         // returns the Pbdkdf2 hash of Salt 'salt' combined with plain text pwd 'password',
         // with 'numIterations' iterations (should be > 1000) if numIterations = 0, use default (1000)
