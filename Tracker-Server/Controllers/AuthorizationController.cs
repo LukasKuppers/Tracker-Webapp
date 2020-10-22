@@ -32,7 +32,8 @@ namespace Tracker_Server.Controllers
                 return BadRequest();
             }
 
-            IAuthService authService = new AuthService(new DbClient(Resource.getString("db_base_path")));
+            IResource resource = new Resource();
+            IAuthService authService = new AuthService(new DbClient(resource.GetString("db_base_path")));
             if (authService.IsValidUser(loginInfo.Email, loginInfo.Password))
             {
                 Guid sessID = authService.CreateSession(loginInfo.Email);
@@ -68,8 +69,9 @@ namespace Tracker_Server.Controllers
 
             // at some point we'll want to validate inputs (beyond not null)
 
-            IDbClient db = new DbClient(Resource.getString("db_base_path"));
-            if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", regInfo.Email))
+            IResource resource = new Resource();
+            IDbClient db = new DbClient(resource.GetString("db_base_path"));
+            if (db.Contains<User, string>(resource.GetString("db_users_path"), "Email", regInfo.Email))
             {
                 return Conflict();
             }
@@ -91,7 +93,7 @@ namespace Tracker_Server.Controllers
                 Username = regInfo.Username,
                 Projects = new List<Guid>()
             };
-            db.InsertRecord(Resource.getString("db_users_path"), newUser);
+            db.InsertRecord(resource.GetString("db_users_path"), newUser);
             return CreatedAtAction("Register", regInfo);
         }
     }

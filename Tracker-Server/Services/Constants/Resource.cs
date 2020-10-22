@@ -5,11 +5,11 @@ using System.Reflection;
 namespace Tracker_Server.Services.Constants
 {
     // handle retrieval of constants from systemConstants.resx
-    public class Resource
+    public class Resource : IResource
     {
         private static readonly string RESOURCE_PATH = "Tracker_Server.Resources.SystemConstants.json";
 
-        private static JObject getJson()
+        private static JObject GetJson()
         {
             var assembly = Assembly.GetEntryAssembly();
             var resStream = assembly.GetManifestResourceStream(RESOURCE_PATH);
@@ -21,9 +21,9 @@ namespace Tracker_Server.Services.Constants
             }
         }
 
-        public static string getString(string key)
+        public string GetString(string key)
         {
-            JObject data = getJson();
+            JObject data = GetJson();
             if (!data.ContainsKey(key))
             {
                 throw new System.ArgumentException("Resources does not contain value for key: " + key);

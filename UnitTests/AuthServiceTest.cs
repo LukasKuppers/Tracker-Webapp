@@ -5,7 +5,6 @@ using System.Text;
 using Tracker_Server.Models.Users;
 using Tracker_Server.Services.Authorization;
 using Tracker_Server.Services.Constants;
-using Tracker_Server.Services.DataAccess;
 using Xunit;
 
 namespace UnitTests
@@ -38,8 +37,8 @@ namespace UnitTests
             };
 
             var mockDbClient = new MockDBClient()
-                .MockContains<User, string>(Resource.getString("db_users_path"), "Email", email, true)
-                .MockFindByField<User, string>(Resource.getString("db_users_path"), "Email", email, users);
+                .MockContains<User, string>("users", "Email", email, true)
+                .MockFindByField<User, string>("users", "Email", email, users);
 
             // act
             AuthService authService = new AuthService(mockDbClient.Object);

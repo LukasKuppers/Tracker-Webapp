@@ -11,18 +11,26 @@ namespace Tracker_Server.Services.Authorization
     public class AuthService : IAuthService
     {
         private IDbClient db;
+        private IResource resource;
 
         public AuthService(IDbClient dbClient)
         {
             db = dbClient;
+            resource = new Resource();
+        }
+
+        public AuthService(IDbClient dbClient, IResource resource)
+        {
+            db = dbClient;
+            this.resource = resource;
         }
 
         public bool IsValidUser(string email, string password)
         {
             // check if a user with the given email exists
-            if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", email))
+            if (db.Contains<User, string>(resource.GetString("db_users_path"), "Email", email))
             {
-                List<User> users = db.FindByField<User, string>(Resource.getString("db_users_path"), 
+                List<User> users = db.FindByField<User, string>(resource.GetString("db_users_path"), 
                     "Email", email);
                 if (users.Count > 1)
                 {
@@ -47,9 +55,9 @@ namespace Tracker_Server.Services.Authorization
         public Guid CreateSession(string email)
         {
             // check if a user with the provided email exists
-            if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", email))
+            if (db.Contains<User, string>(resource.GetString("db_users_path"), "Email", email))
             {
-                List<User> users = db.FindByField<User, string>(Resource.getString("db_users_path"), 
+                List<User> users = db.FindByField<User, string>(resource.GetString("db_users_path"), 
                     "Email", email);
                 if (users.Count > 1)
                 {
@@ -59,10 +67,10 @@ namespace Tracker_Server.Services.Authorization
                 User user = users[0];
 
                 // check if the user already has an existing session
-                if (db.Contains<Session, Guid>(Resource.getString("db_sessions_path"), 
+                if (db.Contains<Session, Guid>(resource.GetString("db_sessions_path"), 
                     "UserId", user.Id))
                 {
-                    Session session = db.FindByField<Session, Guid>(Resource.getString("db_sessions_path"), 
+                    Session session = db.FindByField<Session, Guid>(resource.GetString("db_sessions_path"), 
                         "UserId", user.Id)[0];
                     return session.Id;
                 }
@@ -73,7 +81,7 @@ namespace Tracker_Server.Services.Authorization
                     Id = new Guid(),
                     UserId = user.Id
                 };
-                db.InsertRecord(Resource.getString("db_sessions_path"), newSession);
+                db.InsertRecord(resource.GetString("db_sessions_path"), newSession);
                 return newSession.Id;
             }
             return Guid.Empty;
