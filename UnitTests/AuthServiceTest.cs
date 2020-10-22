@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tracker_Server.Services.DataAccess;
 using Xunit;
 
 namespace UnitTests
@@ -11,10 +12,7 @@ namespace UnitTests
         [Fact]
         public void Test_IsValidUser_ValidUser()
         {
-            using (var mock = AutoMock.GetLoose())
-            {
-                mock.Mock<DBClien>
-            }
+
         }
     }
 }
