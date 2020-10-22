@@ -10,10 +10,12 @@ namespace Tracker_Server.Services.Authorization
 {
     public class AuthService : IAuthService
     {
+        private IDbClient db;
+
         public bool IsValidUser(string email, string password)
         {
             // check if a user with the given email exists
-            var db = new DbClient(Resource.getString("db_base_path"));
+            db = new DbClient(Resource.getString("db_base_path"));
             if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", email))
             {
                 List<User> users = db.FindByField<User, string>(Resource.getString("db_users_path"), 
@@ -41,7 +43,7 @@ namespace Tracker_Server.Services.Authorization
         public Guid CreateSession(string email)
         {
             // check if a user with the provided email exists
-            var db = new DbClient(Resource.getString("db_base_path"));
+            db = new DbClient(Resource.getString("db_base_path"));
             if (db.Contains<User, string>(Resource.getString("db_users_path"), "Email", email))
             {
                 List<User> users = db.FindByField<User, string>(Resource.getString("db_users_path"), 
