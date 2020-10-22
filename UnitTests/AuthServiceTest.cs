@@ -40,8 +40,10 @@ namespace UnitTests
                 .MockContains<User, string>("users", "Email", email, true)
                 .MockFindByField<User, string>("users", "Email", email, users);
 
+            var mockResource = new MockResource().GetDefaultConfig();
+
             // act
-            AuthService authService = new AuthService(mockDbClient.Object);
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
             bool result = authService.IsValidUser(email, password);
 
             // assert
