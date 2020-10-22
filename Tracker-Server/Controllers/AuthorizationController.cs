@@ -32,7 +32,7 @@ namespace Tracker_Server.Controllers
                 return BadRequest();
             }
 
-            IAuthService authService = new AuthService();
+            IAuthService authService = new AuthService(new DbClient(Resource.getString("db_base_path")));
             if (authService.IsValidUser(loginInfo.Email, loginInfo.Password))
             {
                 Guid sessID = authService.CreateSession(loginInfo.Email);
