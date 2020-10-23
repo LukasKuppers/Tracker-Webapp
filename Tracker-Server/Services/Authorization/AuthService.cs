@@ -60,6 +60,11 @@ namespace Tracker_Server.Services.Authorization
         // for reference: users in this table are logged in, given they provide the correct sessionID
         public Guid CreateSession(string email)
         {
+            if (email == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             // check if a user with the provided email exists
             if (db.Contains<User, string>(resource.GetString("db_users_path"), "Email", email))
             {
@@ -67,7 +72,7 @@ namespace Tracker_Server.Services.Authorization
                     "Email", email);
                 if (users.Count > 1)
                 {
-                    return Guid.Empty;   // we'll handle errors when we implement unit tests
+                    throw new InvalidDataException();
                 }
 
                 User user = users[0];

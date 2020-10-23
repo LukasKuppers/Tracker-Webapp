@@ -26,32 +26,32 @@ namespace UnitTests
             return this;
         }
 
-        public MockDBClient MockInsertRecord<T>(string table, T record, DbStatus output)
+        public MockDBClient MockInsertRecord<T>(string table, T record, Exception e)
         {
             Setup(x => x.InsertRecord<T>(
                 table,
                 record
-            )).Returns(output);
+            )).Throws(e);
             return this;
         }
 
-        public MockDBClient MockDeleteRecord<T>(string table, Guid id, DbStatus output)
+        public MockDBClient MockDeleteRecord<T>(string table, Guid id, Exception e)
         {
             Setup(x => x.DeleteRecord<T>(
                 table,
                 id
-            )).Returns(output);
+            )).Throws(e);
             return this;
         }
 
-        public MockDBClient MockUpdateRecord<T, U>(string table, Guid id, string fieldName, U data, DbStatus output)
+        public MockDBClient MockUpdateRecord<T, U>(string table, Guid id, string fieldName, U data, Exception e)
         {
             Setup(x => x.UpdateRecord<T, U>(
                 table,
                 id,
                 fieldName,
                 data
-            )).Returns(output);
+            )).Throws(e);
             return this;
         }
 

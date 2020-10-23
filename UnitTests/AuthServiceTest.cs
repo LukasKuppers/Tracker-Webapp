@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.Moq;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -162,6 +163,146 @@ namespace UnitTests
 
             Assert.Throws<InvalidDataException>(() =>
                 authService.IsValidUser(email, password)
+            );
+        }
+
+        [Fact]
+        public void Test_CreateSession_ValidEmailNoSession()
+        {
+            string email = "Jon@Jones.com";
+            List<User> users = new List<User>
+            {
+                new User
+                {
+                    Id = new Guid(), 
+                    Email = email, 
+                    Username = "jonny", 
+                    Credentials = new UserCredentials
+                    {
+                        PwdSalt = new Guid(), 
+                        PwdHash = "testhash"
+                    }, 
+                    Projects = new List<Guid>()
+                }
+            };
+
+            var mockDbClient = new MockDBClient()
+                .MockContains<User, string>("users", "Email", email, true)
+                .MockFindByField<User, string>("users", "Email", email, users)
+                .MockContains<Session, Guid>("sessions", "UserId", users[0].Id, false);
+
+            var mockResource = new MockResource().GetDefaultConfig();
+
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
+            Guid sessionID = authService.CreateSession(email);
+
+            Assert.True(sessionID != null);
+            Assert.True(sessionID != Guid.Empty);
+        }
+
+        [Fact]
+        public void Test_CreateSessoin_ValidEmailExistingSession()
+        {
+            string email = "Jon@Jones.com";
+            List<User> users = new List<User>
+            {
+                new User
+                {
+                    Id = new Guid(),
+                    Email = email,
+                    Username = "jonny",
+                    Credentials = new UserCredentials
+                    {
+                        PwdSalt = new Guid(),
+                        PwdHash = "testhash"
+                    },
+                    Projects = new List<Guid>()
+                }
+            };
+
+            Session session = new Session
+            {
+                UserId = users[0].Id,
+                Id = new Guid()
+            };
+
+            var mockDbClient = new MockDBClient()
+                .MockContains<User, string>("users", "Email", email, true)
+                .MockFindByField<User, string>("users", "Email", email, users)
+                .MockContains<Session, Guid>("sessions", "UserId", users[0].Id, true)
+                .MockFindByField<Session, Guid>("sessions", "UserId", users[0].Id, new List<Session> { session });
+
+            var mockResource = new MockResource().GetDefaultConfig();
+
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
+            Guid sessionId = authService.CreateSession(email);
+
+            Assert.True(sessionId == session.Id);
+        }
+
+        [Fact]
+        public void Test_CreateSession_InvalidEmail()
+        {
+            string email = "Jon@Jones.com";
+
+            var mockDbClient = new MockDBClient()
+                .MockContains<User, string>("users", "Email", email, false);
+
+            var mockResource = new MockResource().GetDefaultConfig();
+
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
+            Guid sessionId = authService.CreateSession(email);
+
+            Assert.True(sessionId != null);
+            Assert.True(sessionId == Guid.Empty);
+        }
+
+        [Fact]
+        public void Test_CreateSession_NullInput()
+        {
+            string email = null;
+
+            var mockDbClient = new MockDBClient();
+            var mockResource = new MockResource().GetDefaultConfig();
+
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
+
+            Assert.Throws<ArgumentNullException>(() =>
+                authService.CreateSession(email)
+            );
+        }
+
+        [Fact]
+        public void Test_CreateSession_MultipleUsers()
+        {
+            string email = "Jon@Bones.com";
+            User user = new User
+            {
+                Id = new Guid(),
+                Email = email,
+                Username = "Jonny",
+                Credentials = new UserCredentials
+                {
+                    PwdSalt = new Guid(),
+                    PwdHash = "testhash"
+                },
+                Projects = new List<Guid>()
+            };
+            List<User> users = new List<User>
+            {
+                user, user
+            };
+
+            var mockDbClient = new MockDBClient()
+                .MockContains<User, string>("users", "Email", email, true)
+                .MockFindByField<User, string>("users", "Email", email, users);
+
+            var mockResource = new MockResource().GetDefaultConfig();
+
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
+
+            Assert.Throws<InvalidDataException>(() =>
+                authService.CreateSession(email)
             );
         }
     }
