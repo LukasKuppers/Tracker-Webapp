@@ -2,8 +2,8 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Tracker_Server.Services.DataAccess
 {
@@ -34,15 +34,13 @@ namespace Tracker_Server.Services.DataAccess
             return query.ToList();
         }
 
-        public DbStatus InsertRecord<T>(string table, T record)
+        public void InsertRecord<T>(string table, T record)
         {
             var collection = db.GetCollection<T>(table);
             collection.InsertOne(record);
-
-            return DbStatus.SUCCESS;
         }
 
-        public DbStatus DeleteRecord<T>(string table, Guid id)
+        public void DeleteRecord<T>(string table, Guid id)
         {
             var collection = db.GetCollection<T>(table);
             var filter = Builders<T>.Filter.Eq("_id", id);
@@ -50,18 +48,17 @@ namespace Tracker_Server.Services.DataAccess
             long count = collection.CountDocuments(filter);
             if (count <= 0)
             {
-                return DbStatus.NOT_FOUND;
+                throw new KeyNotFoundException();
             }
             if (count > 1)
             {
-                return DbStatus.INTERNAL_ERROR;
+                throw new InvalidDataException();
             }
 
             collection.DeleteOne(filter);
-            return DbStatus.SUCCESS;
         }
 
-        public DbStatus UpdateRecord<T, U>(string table, Guid id, string fieldName, U data)
+        public void UpdateRecord<T, U>(string table, Guid id, string fieldName, U data)
         {
             var collection = db.GetCollection<T>(table);
             var filter = Builders<T>.Filter.Eq("_id", id);
@@ -69,16 +66,15 @@ namespace Tracker_Server.Services.DataAccess
             long count = collection.CountDocuments(filter);
             if (count <= 0)
             {
-                return DbStatus.NOT_FOUND;
+                throw new KeyNotFoundException();
             }
             if (count > 1)
             {
-                return DbStatus.INTERNAL_ERROR;
+                throw new InvalidDataException();
             }
 
             var update = Builders<T>.Update.Set(fieldName, data);
             collection.UpdateOne(filter, update);
-            return DbStatus.SUCCESS;
         }
 
         public bool Contains<T, U>(string table, string fieldName, U data)
