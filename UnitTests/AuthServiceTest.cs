@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.Moq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Tracker_Server.Models.Users;
 using Tracker_Server.Services.Authorization;
@@ -52,7 +53,7 @@ namespace UnitTests
             mockDbClient.VerifyAll();
         }
 
-        //[Fact]
+        [Fact]
         public void Test_IsValidUser_NullInput()
         {
             var mockDbClient = new MockDBClient()
@@ -126,6 +127,42 @@ namespace UnitTests
             bool result = authService.IsValidUser(email, password);
 
             Assert.True(result == false);
+        }
+
+        [Fact]
+        public void Test_IsValidUser_MultipleUsers()
+        {
+            IHashManager manager = new HashManager();
+            string email = "Jon@Bones.com";
+            string password = "Password";
+            Guid pwdSalt = new Guid();
+            User user = new User
+            {
+                Id = new Guid(),
+                Credentials = new UserCredentials
+                {
+                    PwdHash = manager.GetHash(pwdSalt.ToString(), password, 0),
+                    PwdSalt = pwdSalt
+                },
+                Email = email,
+                Username = "JonnyBonesJones",
+                Projects = new List<Guid>()
+            };
+            List<User> users = new List<User>();
+            users.Add(user);
+            users.Add(user);
+
+            var mockDbClient = new MockDBClient()
+                .MockContains<User, string>("users", "Email", email, true)
+                .MockFindByField<User, string>("users", "Email", email, users);
+
+            var mockResource = new MockResource().GetDefaultConfig();
+
+            AuthService authService = new AuthService(mockDbClient.Object, mockResource.Object);
+
+            Assert.Throws<InvalidDataException>(() =>
+                authService.IsValidUser(email, password)
+            );
         }
     }
 }

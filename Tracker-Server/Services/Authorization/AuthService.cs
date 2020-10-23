@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Tracker_Server.Models.Users;
@@ -27,6 +28,11 @@ namespace Tracker_Server.Services.Authorization
 
         public bool IsValidUser(string email, string password)
         {
+            if (email == null || password == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             // check if a user with the given email exists
             if (db.Contains<User, string>(resource.GetString("db_users_path"), "Email", email))
             {
@@ -34,7 +40,7 @@ namespace Tracker_Server.Services.Authorization
                     "Email", email);
                 if (users.Count > 1)
                 {
-                    return false;   // we'll handle errors when we implement unit tests
+                    throw new InvalidDataException();
                 }
 
                 // check if password is correct
