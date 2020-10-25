@@ -20,15 +20,14 @@ If the request is successful, it will return the string representation of the us
 example output:
 ```
 {
-	"SessionId": "asdf-qwer-zxcv-uiop"
+	"SessionId": "3dd272c5-3a79-4b33-a3dd-216fcae8629d"
 }
 ```
 
 #### Response Codes:
-- **422** if the request body is malformed (null fields, ect...)
-- **400** if the Email or Password is an empty string
+- **400** if the Email or Password is null or an empty string
 - **401** if the given login credentials are not valid
-- **200** if the given login credentials are valid
+- **200** if the given login credentials are valid - returns session ID
 
 ___
 `POST /api/authorization`
@@ -48,10 +47,9 @@ Note: password/ email validation have not *yet* been implemented on the BE.
 If the request is successful, it will return the same JSON body as in the request.
 
 #### Response Codes:
-- **422** if the request body is malformed (null fields, ect...)
-- **400** if any of the provided fields are empty
+- **400** if any of the provided fields are null or empty
 - **409** if a user with the specified Email Address already exists
-- **201** if the registration was successful
+- **201** if the registration was successful - returns user info
 
 ### Projects API:
 `GET /api/projects/{projectId}`
