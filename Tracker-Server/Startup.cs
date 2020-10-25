@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Tracker_Server.Services.ActionFilters;
 
 namespace Tracker_Server
 {
@@ -29,10 +30,16 @@ namespace Tracker_Server
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("https://localhost:44387"); 
+                    //builder.WithOrigins("https://localhost:44387", ""); 
+                    builder.AllowAnyOrigin();
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
                 });
+            });
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ValidationFilter));
             });
 
             services.AddControllers();

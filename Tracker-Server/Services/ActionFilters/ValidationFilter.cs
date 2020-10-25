@@ -19,7 +19,7 @@ namespace Tracker_Server.Services.ActionFilters
             {
                 if (param.Value == null)
                 {
-                    context.Result = new BadRequestObjectResult("parameter " + param.Key + "is null");
+                    context.Result = new BadRequestResult();
                     return;
                 }
                 foreach (var property in param.Value.GetType().GetProperties())
@@ -27,7 +27,7 @@ namespace Tracker_Server.Services.ActionFilters
                     var value = property.GetValue(param.Value);
                     if (value == null)
                     {
-                        context.Result = new BadRequestObjectResult("property " + property.Name + "is null");
+                        context.Result = new BadRequestResult();
                         return;
                     }
                 }

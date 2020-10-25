@@ -19,13 +19,6 @@ namespace Tracker_Server.Controllers
         [HttpPut]
         public ActionResult<PutAuthOut> Login(PutAuthIn loginInfo)
         {
-            if (loginInfo == null ||
-                loginInfo.Email == null ||
-                loginInfo.Password == null)
-            {
-                return UnprocessableEntity();
-            }
-
             if (loginInfo.Email == "" ||
                 loginInfo.Password == "")
             {
@@ -52,14 +45,6 @@ namespace Tracker_Server.Controllers
         [HttpPost]
         public ActionResult Register(PostRegIn regInfo)
         {
-            if (regInfo == null ||
-                regInfo.Email == null ||
-                regInfo.Password == null ||
-                regInfo.Username == null)
-            {
-                return UnprocessableEntity();
-            }
-
             if (regInfo.Email == "" ||
                 regInfo.Password == "" ||
                 regInfo.Username == "")
