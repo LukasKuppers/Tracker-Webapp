@@ -89,7 +89,7 @@ namespace Tracker_Server.Services.Authorization
                 // create a new user session
                 Session newSession = new Session()
                 {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     UserId = user.Id
                 };
                 db.InsertRecord(resource.GetString("db_sessions_path"), newSession);

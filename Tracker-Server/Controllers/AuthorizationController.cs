@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,8 +53,6 @@ namespace Tracker_Server.Controllers
                 return BadRequest();
             }
 
-            // at some point we'll want to validate inputs (beyond not null)
-
             IResource resource = new Resource();
             IDbClient db = new DbClient(resource.GetString("db_base_path"));
             if (db.Contains<User, string>(resource.GetString("db_users_path"), "Email", regInfo.Email))
@@ -61,8 +60,24 @@ namespace Tracker_Server.Controllers
                 return Conflict();
             }
 
+            // validate email and password
+            try
+            {
+                new MailAddress(regInfo.Email);
+            } catch
+            {
+                return UnprocessableEntity();
+            }
+
+            PasswordValidator pv = new PasswordValidator();
+            if (!pv.IsValid(regInfo.Password))
+            {
+                return UnprocessableEntity();
+            }
+
+
             IHashManager hashManager = new HashManager();
-            Guid salt = new Guid();
+            Guid salt = Guid.NewGuid();
             string hash = hashManager.GetHash(salt.ToString(), regInfo.Password, 0);
             UserCredentials credentials = new UserCredentials()
             {
@@ -72,7 +87,7 @@ namespace Tracker_Server.Controllers
 
             User newUser = new User()
             {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 Email = regInfo.Email, 
                 Credentials = credentials, 
                 Username = regInfo.Username,

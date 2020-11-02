@@ -48,6 +48,7 @@ If the request is successful, it will return the same JSON body as in the reques
 
 #### Response Codes:
 - **400** if any of the provided fields are null or empty
+- **422** if the email or password was invalid (malformed email, password doesn't meet requirements)
 - **409** if a user with the specified Email Address already exists
 - **201** if the registration was successful - returns user info
 
