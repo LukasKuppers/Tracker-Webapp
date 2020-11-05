@@ -7,5 +7,10 @@ namespace Tracker_Server.Models.Users
 {
     public class GetUsersOut
     {
+        public string Username { get; set; }
+
+        public string Email { get; set; }
+
+        public List<Guid> Projects { get; set; }
     }
 }

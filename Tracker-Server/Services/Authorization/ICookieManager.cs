@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+
 
 namespace Tracker_Server.Services.Authorization
 {
-    interface CookieManager
+    public interface ICookieManager
     {
+        public string GetCookie(HttpContext context, string key);
+
+        public Guid GetSessionID(HttpContext context);
     }
 }

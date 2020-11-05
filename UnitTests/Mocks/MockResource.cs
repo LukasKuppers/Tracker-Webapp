@@ -10,7 +10,8 @@ namespace UnitTests
             return new MockResource()
                 .MockGetString("db_base_path", "tracker")
                 .MockGetString("db_users_path", "users")
-                .MockGetString("db_sessions_path", "sessions");
+                .MockGetString("db_sessions_path", "sessions")
+                .MockGetString("cookies_session_key", "sessionID");
         }
 
         public MockResource MockGetString(string key, string output)

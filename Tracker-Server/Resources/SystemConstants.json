@@ -1,5 +1,6 @@
 {
   "db_base_path": "tracker",
-  "db_users_path": "users", 
-  "db_sessions_path": "sessions"
+  "db_users_path": "users",
+  "db_sessions_path": "sessions",
+  "cookies_session_key": "sessionID"
 }
