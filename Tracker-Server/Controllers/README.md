@@ -52,6 +52,28 @@ If the request is successful, it will return the same JSON body as in the reques
 - **409** if a user with the specified Email Address already exists
 - **201** if the registration was successful - returns user info
 
+### Users API:
+`GET /api/users/current`
+
+Get a the current user info. Note that this requires that the user is logged in with a valid session, where the server-provided sessionID is provided in the request header - goto top of docs to see sessionID requirements.
+
+If successful, a JSON body of the following form is returned:
+```
+{
+	"Username": "Jon Jones", 
+	"Email": "JonnyJones@hotmail.com", 
+	"Projects": [
+		"7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
+		"3dd272c5-3a79-4b33-a3dd-216fcae8629df"]
+}
+```
+Note that the Projects is a list of project ID's
+
+#### Response Codes:
+- **400** if the sessionID is empty or malformed
+- **401** if the sessionID is invalid
+- **200** if the request was successful and the user info is returned in the session body
+
 ### Projects API:
 `GET /api/projects/{projectId}`
 
@@ -75,5 +97,5 @@ The `Members` and `Tasks` properties should be lists containing user ID's and ta
 #### Response Codes:
 - **400** if the given projectID is empty or malformed
 - **403** if the user is not the owner or a member of the project
-- **404** if the no project exists with the given projectId
+- **404** if no project exists with the given projectId
 - **401** if the user is not logged in
