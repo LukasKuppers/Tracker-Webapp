@@ -16,6 +16,7 @@ namespace Tracker_Server.Controllers
     public class UsersController : ControllerBase
     {
         [HttpGet]
+        [Route("current")]
         public ActionResult<GetUsersOut> GetCurrent()
         {
             CookieManager cookieManager = new CookieManager();
