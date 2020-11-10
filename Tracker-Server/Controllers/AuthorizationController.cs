@@ -20,8 +20,8 @@ namespace Tracker_Server.Controllers
         [HttpPut]
         public ActionResult<PutAuthOut> Login(PutAuthIn loginInfo)
         {
-            if (loginInfo.Email == "" ||
-                loginInfo.Password == "")
+            if (loginInfo.Email == null || loginInfo.Email == "" ||
+                loginInfo.Password == null || loginInfo.Password == "")
             {
                 return BadRequest();
             }
@@ -46,9 +46,9 @@ namespace Tracker_Server.Controllers
         [HttpPost]
         public ActionResult Register(PostRegIn regInfo)
         {
-            if (regInfo.Email == "" ||
-                regInfo.Password == "" ||
-                regInfo.Username == "")
+            if (regInfo.Email == null || regInfo.Email == "" ||
+                regInfo.Password == null || regInfo.Password == "" ||
+                regInfo.Username == null || regInfo.Username == "")
             {
                 return BadRequest();
             }
