@@ -74,6 +74,27 @@ Note that the Projects is a list of project ID's
 - **401** if the sessionID is invalid
 - **200** if the request was successful and the user info is returned in the session body
 
+___
+`GET /api/users/{userId}`
+
+Get info for the specified user. This is exposes public information that every user can access (given the correct userID). 
+
+If successful, a JSON body of the following form is returned:
+```
+{
+	"Username": "Jon Jones", 
+	"Email": "JonnyJones@hotmail.com", 
+	"Projects": [
+		"7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
+		"3dd272c5-3a79-4b33-a3dd-216fcae8629df"]
+}
+```
+
+#### Response Codes:
+- **400** if the userId is empty or malformed
+- **404** if no user with the specified Id exists
+- **200** if the request was successful and the users info was returned
+
 ### Projects API:
 `GET /api/projects/{projectId}`
 
