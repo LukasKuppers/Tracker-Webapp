@@ -22,15 +22,6 @@ namespace Tracker_Server.Services.ActionFilters
                     context.Result = new BadRequestResult();
                     return;
                 }
-                foreach (var property in param.Value.GetType().GetProperties())
-                {
-                    var value = property.GetValue(param.Value);
-                    if (value == null)
-                    {
-                        context.Result = new BadRequestResult();
-                        return;
-                    }
-                }
             }
             if (!context.ModelState.IsValid)
             {
