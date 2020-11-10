@@ -60,9 +60,10 @@ Get a the current user info. Note that this requires that the user is logged in 
 If successful, a JSON body of the following form is returned:
 ```
 {
-	"Username": "Jon Jones", 
-	"Email": "JonnyJones@hotmail.com", 
-	"Projects": [
+	"id": "854b1852-4ae6-4f5f-81e5-b46ef4297ce4"
+	"username": "Jon Jones", 
+	"email": "JonnyJones@hotmail.com", 
+	"projects": [
 		"7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
 		"3dd272c5-3a79-4b33-a3dd-216fcae8629df"]
 }
@@ -82,9 +83,10 @@ Get info for the specified user. This is exposes public information that every u
 If successful, a JSON body of the following form is returned:
 ```
 {
-	"Username": "Jon Jones", 
-	"Email": "JonnyJones@hotmail.com", 
-	"Projects": [
+	"id": "854b1852-4ae6-4f5f-81e5-b46ef4297ce4"
+	"username": "Jon Jones", 
+	"email": "JonnyJones@hotmail.com", 
+	"projects": [
 		"7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
 		"3dd272c5-3a79-4b33-a3dd-216fcae8629df"]
 }
