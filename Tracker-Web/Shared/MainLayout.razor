@@ -1,7 +1,34 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="main">
-    <div class="content px-4">
-        @Body
+<div id="wrapper">
+
+    @if (!sidebarHidden)
+    {
+    <div>
+        <NavMenu />
+    </div>
+    }
+
+    <div class="main">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" @onclick="ToggleSidebar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </nav>
+                @Body
+            </div>
+        </div>
     </div>
 </div>
+
+@code 
+{
+    private bool sidebarHidden = false;
+
+    private void ToggleSidebar()
+    {
+        sidebarHidden = !sidebarHidden;
+    }
+}
