@@ -22,7 +22,9 @@
 </ul>
 
 @code {
-    private bool collapseNavMenu = false;
+
+    [Parameter]
+    public bool collapseNavMenu { get; set; }
 
     private string NavMenuCssClass => collapseNavMenu ? "toggled" : null;
 

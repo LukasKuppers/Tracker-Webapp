@@ -2,21 +2,26 @@
 @inject NavigationManager navManager
 
 <div id="wrapper">
-
-    @if (!sidebarHidden)
+    @if (!isNoAuthPage)
     {
     <div>
-        <NavMenu />
+        <NavMenu collapseNavMenu="@sidebarHidden"/>
     </div>
     }
 
     <div class="main w-100">
-        <div class="d-flex flex-column h-100" id="content-wrapper">
+        <div class="d-flex flex-column h-100 @noAuthBackground" id="content-wrapper">
             <div id="content">
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    @if (!isNoAuthPage)
+                    {
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" @onclick="ToggleSidebar">
                         <i class="fa fa-bars"></i>
                     </button>
+                    } else
+                    {
+                    <div class="navbar-brand text-primary">Tracker</div>
+                    }
                 </nav>
                 <div class="container-fluid">
                     @Body
@@ -35,8 +40,22 @@
 </div>
 
 @code 
-{
+{      
+    protected override Task OnInitializedAsync()
+    {
+        Services.NoAuthPages pages = new Services.NoAuthPages(navManager);
+        if (pages.GetPages().Contains(navManager.Uri))
+        {
+            isNoAuthPage = true;
+        }
+
+        return base.OnInitializedAsync();
+    }
+
     private bool sidebarHidden = false;
+    private bool isNoAuthPage;
+
+    private string noAuthBackground => isNoAuthPage ? "bg-gradient-primary" : "";
 
     private void ToggleSidebar()
     {
