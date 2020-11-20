@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -18,9 +19,16 @@ namespace Tracker_Web.Services
 
     public class Consumer
     {
-        private static string apiBaseUrl = "https://localhost://1234/";
+        private static string apiBaseUrl = "https://localhost:44391";
 
-        public static async Task<T> makeEmptyRequest<T>(HttpClient client, MethodType method, string path)
+        private HttpClient client;
+
+        public Consumer(HttpClient client)
+        {
+            this.client = client;
+        }
+
+        public async Task<(T, HttpStatusCode)> makeEmptyRequest<T>(MethodType method, string path)
         {
             var requestMsg = new HttpRequestMessage()
             {
@@ -31,7 +39,7 @@ namespace Tracker_Web.Services
             return await sendRequest<T>(requestMsg, client);
         }
 
-        public static async Task<T> makeRequest<T, U>(HttpClient client, MethodType method, string path, U body)
+        public async Task<(T, HttpStatusCode)> makeRequest<T, U>(MethodType method, string path, U body)
         {
             var requestMsg = new HttpRequestMessage()
             {
@@ -43,13 +51,13 @@ namespace Tracker_Web.Services
             return await sendRequest<T>(requestMsg, client);
         }
 
-        private static async Task<T> sendRequest<T>(HttpRequestMessage requestMsg, HttpClient client)
+        private async Task<(T, HttpStatusCode)> sendRequest<T>(HttpRequestMessage requestMsg, HttpClient client)
         {
             var httpResponse = await client.SendAsync(requestMsg);
             string rawResponse = await httpResponse.Content.ReadAsStringAsync();
 
             T responseBody = JsonConvert.DeserializeObject<T>(rawResponse);
-            return responseBody;
+            return (responseBody, httpResponse.StatusCode);
         }
     }
 }

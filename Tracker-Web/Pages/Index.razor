@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inject HttpClient http
+@inject NavigationManager navManager
 @using Model.Register
 
 <div class="container">
@@ -43,6 +45,7 @@
                                     <ValidationMessage For="@(() => registerForm.RepeatPassword)" class="text-danger"/>
                                 </div>
                             </div>
+                            <div class="text-danger">@errorMsg</div>
                             <button type="submit" class="btn btn-primary btn-user btn-block" style="margin-top:3em">
                                 Register Account
                             </button>
@@ -64,8 +67,42 @@
 {
     private RegisterForm registerForm = new RegisterForm();
 
+    private Consumer apiConsumer;
+
+    private string errorMsg = "";
+
+    protected override Task OnInitializedAsync()
+    {
+        apiConsumer = new Consumer(http);
+        return base.OnInitializedAsync();
+    }
+
     private async Task SubmitRegisterForm()
     {
+        errorMsg = "";
+        RegisterIn body = new RegisterIn()
+        {
+            Username = registerForm.Username,
+            Email = registerForm.Email,
+            Password = registerForm.Password
+        };
 
+        var apiResponse = await apiConsumer.makeRequest<RegisterIn, RegisterIn>(MethodType.POST, "/api/authorization", body);
+        var responseCode = apiResponse.Item2;
+
+        switch (responseCode)
+        {
+            case System.Net.HttpStatusCode.UnprocessableEntity:
+                errorMsg = "Email or Password has invalid format";
+                break;
+            case System.Net.HttpStatusCode.Conflict:
+                errorMsg = "An account with the given email already exists";
+                break;
+            case System.Net.HttpStatusCode.Created:
+                navManager.NavigateTo("login");
+                break;
+            default:
+                return;
+        }
     }
 }
