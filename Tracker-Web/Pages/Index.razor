@@ -11,31 +11,36 @@
                 <div class="col-lg-7">
                     <div class="p-5">
                         <div class="text-center">
-                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                            <h1 class="h4 text-gray-900 mb-4">Create an Account</h1>
                         </div>
 
                         <EditForm Model="@registerForm" OnValidSubmit="@SubmitRegisterForm" class="user">
+                        <DataAnnotationsValidator />
 
                             <div class="form-group">
                                 <label>Username</label>
                                 <InputText id="username" class="form-control form-control-user"
                                            @bind-Value="registerForm.Username" />
+                                <ValidationMessage For="@(() => registerForm.Username)" class="text-danger"/>
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
                                 <InputText id="email" class="form-control form-control-user"
-                                           @bind-Value="registerForm.Email"/>
+                                           @bind-Value="registerForm.Email" />
+                                <ValidationMessage For="@(() => registerForm.Email)" class="text-danger"/>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                     <label>Password</label>
                                     <InputText type="password" id="password" class="form-control form-control-user"
-                                               @bind-Value="registerForm.Password"/>
+                                               @bind-Value="registerForm.Password" />
+                                    <ValidationMessage For="@(() => registerForm.Password)" class="text-danger"/>
                                 </div>
                                 <div class="col-sm-6">
                                     <label>Repeat Password</label>
                                     <InputText type="password" id="repeadPassword" class="form-control form-control-user"
-                                               @bind-Value="registerForm.RepeatPassword"/>
+                                               @bind-Value="registerForm.RepeatPassword" />
+                                    <ValidationMessage For="@(() => registerForm.RepeatPassword)" class="text-danger"/>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary btn-user btn-block" style="margin-top:3em">
@@ -46,7 +51,7 @@
 
                         <hr>
                         <div class="text-center">
-                            <a class="small" href="/login">Already have an account? Login!</a>
+                            <a class="small" href="/login">Already have an account? Login.</a>
                         </div>
                     </div>
                 </div>
