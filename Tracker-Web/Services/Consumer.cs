@@ -19,7 +19,7 @@ namespace Tracker_Web.Services
 
     public class Consumer
     {
-        private static string apiBaseUrl = "https://localhost:44391";
+        private static string API_BASE_URI = "https://localhost:44391";
 
         private HttpClient client;
 
@@ -33,7 +33,7 @@ namespace Tracker_Web.Services
             var requestMsg = new HttpRequestMessage()
             {
                 Method = new HttpMethod(method.ToString()),
-                RequestUri = new Uri(apiBaseUrl + path)
+                RequestUri = new Uri(API_BASE_URI + path)
             };
 
             return await sendRequest<T>(requestMsg, client);
@@ -45,7 +45,7 @@ namespace Tracker_Web.Services
             {
                 Method = new HttpMethod(method.ToString()),
                 Content = JsonContent.Create(body),
-                RequestUri = new Uri(apiBaseUrl + path)
+                RequestUri = new Uri(API_BASE_URI + path)
             };
 
             return await sendRequest<T>(requestMsg, client);
