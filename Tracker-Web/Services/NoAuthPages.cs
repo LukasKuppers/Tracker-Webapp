@@ -20,9 +20,14 @@ namespace Tracker_Web.Services
             return new List<string>
             {
                 navManager.BaseUri,
-                navManager.BaseUri + "/login",
-                navManager.BaseUri + "/register"
+                navManager.BaseUri + "login",
             };
+        }
+
+        public bool IsNoAuthPage(string uri)
+        {
+            List<string> pages = GetPages();
+            return pages.Contains(uri);
         }
     }
 }

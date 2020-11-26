@@ -44,10 +44,7 @@
     protected override Task OnInitializedAsync()
     {
         Services.NoAuthPages pages = new Services.NoAuthPages(navManager);
-        if (pages.GetPages().Contains(navManager.Uri))
-        {
-            isNoAuthPage = true;
-        }
+        isNoAuthPage = pages.IsNoAuthPage(navManager.Uri);
 
         return base.OnInitializedAsync();
     }
