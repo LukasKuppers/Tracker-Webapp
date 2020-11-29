@@ -1,0 +1,34 @@
+﻿
+<div id="wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <div class="navbar-brand text-primary">Tracker</div>
+            </nav>
+            <div class="container-fluid">
+                <div class="text-center" style="margin-top:12em; margin-bottom:12em">
+                    <div class="error mx-auto" data-text="404">404</div>
+                    <p class="lead text-gray-800 mb-5">
+                        Page not found
+                    </p>
+                    <p class="text-gray-500 mb-0">
+                        What are you looking for all the way out here?
+                    </p>
+                    <a href="/">← Back to Dashboard</a>
+                </div>
+            </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Lukas Kuppers 2020</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment body { get; set; }
+}
