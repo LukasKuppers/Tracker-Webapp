@@ -10,6 +10,7 @@ using Tracker_Server.Models.Users;
 using Tracker_Server.Services.Authorization;
 using Tracker_Server.Services.Constants;
 using Tracker_Server.Services.DataAccess;
+using Tracker_Server.Services.ActionFilters;
 
 namespace Tracker_Server.Controllers
 {
@@ -17,6 +18,17 @@ namespace Tracker_Server.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
+        [HttpGet]
+        [AuthorizationFilter]
+        public ActionResult<GetAuthOut> CheckAuth()
+        {
+            GetAuthOut response = new GetAuthOut()
+            {
+                Role = "user"
+            };
+            return Ok(response);
+        }
+
         [HttpPut]
         public ActionResult<PutAuthOut> Login(PutAuthIn loginInfo)
         {

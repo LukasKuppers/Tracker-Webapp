@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using Model
 @inject NavigationManager navManager
 @inject HttpClient http
 
@@ -42,7 +43,7 @@
 
 @code 
 {      
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Services.NoAuthPages pages = new Services.NoAuthPages(navManager);
         isNoAuthPage = pages.IsNoAuthPage(navManager.Uri);
@@ -52,10 +53,23 @@
             // check if user is authorized
             apiConsumer = new Consumer(http);
 
-            var apiResponse = apiConsumer.makeEmptyRequest
+            var apiResponse = await apiConsumer.makeEmptyRequest<AuthStatusOut>(MethodType.GET, "/api/authorization");
+            var responseCode = apiResponse.Item2;
+            switch (responseCode)
+            {
+                case System.Net.HttpStatusCode.OK:
+                    break;
+                case System.Net.HttpStatusCode.Unauthorized:
+                    // route to login screen
+                    navManager.NavigateTo("login");
+                    break;
+                default:
+                    navManager.NavigateTo("login");
+                    return;
+            }
         }
 
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
     private Consumer apiConsumer;

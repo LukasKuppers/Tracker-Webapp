@@ -16,11 +16,11 @@ If the user is authenticated the request returns a JSON body of the form:
 }
 ```
 
-Where the role is the level of security the user has obtained. Only three roles exist: {unauthorized, user, admin}
+Where the role is the level of security the user has obtained. Only two roles exist: {user, admin}
 
 #### Response Codes:
 - **400** if the sessionID cookie doesn't exist, or is malformed
-- **401** and the user role `unauthorized` if the sessionID isn't valid
+- **401** if the sessionID isn't valid
 - **200** and the user role `user` or `admin` if the sessionID is valid
 
 ___
