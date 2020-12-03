@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager navManager
+@inject HttpClient http
 
 <div id="wrapper">
     @if (!isNoAuthPage)
@@ -46,8 +47,18 @@
         Services.NoAuthPages pages = new Services.NoAuthPages(navManager);
         isNoAuthPage = pages.IsNoAuthPage(navManager.Uri);
 
+        if (!isNoAuthPage)
+        {
+            // check if user is authorized
+            apiConsumer = new Consumer(http);
+
+            var apiResponse = apiConsumer.makeEmptyRequest
+        }
+
         return base.OnInitializedAsync();
     }
+
+    private Consumer apiConsumer;
 
     private bool sidebarHidden = false;
     private bool isNoAuthPage;
