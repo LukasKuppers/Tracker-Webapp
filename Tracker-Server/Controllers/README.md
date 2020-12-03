@@ -5,6 +5,25 @@ A comprehensive list of all the endpoints provided by the back end. Endpoints sh
 - sessionID: A UUID provided by the authorization api
 
 ### Authorization API:
+`Get /api/authorization`
+
+Asks the server if the user is authorized. No JSON body is required, but a valid user will have their correct session ID in the request cookies.
+If the user is authenticated the request returns a JSON body of the form:
+
+```
+{
+	"Role": "user"
+}
+```
+
+Where the role is the level of security the user has obtained. Only three roles exist: {unauthorized, user, admin}
+
+#### Response Codes:
+- **400** if the sessionID cookie doesn't exist, or is malformed
+- **401** and the user role `unauthorized` if the sessionID isn't valid
+- **200** and the user role `user` or `admin` if the sessionID is valid
+
+___
 `PUT /api/authorization`
 
 Accepts a JSON body in the form:
