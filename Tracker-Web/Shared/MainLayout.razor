@@ -59,12 +59,9 @@
             {
                 case System.Net.HttpStatusCode.OK:
                     break;
-                case System.Net.HttpStatusCode.Unauthorized:
-                    // route to login screen
-                    navManager.NavigateTo("login");
-                    break;
                 default:
                     navManager.NavigateTo("login");
+                    await OnInitializedAsync();
                     return;
             }
         }
