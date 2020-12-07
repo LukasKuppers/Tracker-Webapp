@@ -1,13 +1,14 @@
 ﻿# API Documentation
 NOTE: very early specification
 
-A comprehensive list of all the endpoints provided by the back end. Endpoints should only be accesible if the following cookies exist:
-- sessionID: A UUID provided by the authorization api
+A comprehensive list of all the endpoints provided by the back end. Endpoints should only be accesible if the client sends 
+their session ID in the authorization header. The session ID is provided by the server in the request body of the
+`PUT /api/authorization` call, if the provided credentials are valid.
 
 ### Authorization API:
 `Get /api/authorization`
 
-Asks the server if the user is authorized. No JSON body is required, but a valid user will have their correct session ID in the request cookies.
+Asks the server if the user is authorized. No JSON body is required, but a valid user will have their correct session ID in the requests auth header.
 If the user is authenticated the request returns a JSON body of the form:
 
 ```
