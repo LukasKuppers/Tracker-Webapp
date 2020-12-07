@@ -16,17 +16,10 @@ namespace Tracker_Server.Services.ActionFilters
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             // check if session cookie exists and is valid
-            CookieManager cookieManager = new CookieManager();
+            ISessionParser sessionParser = new AuthHeaderReader();
             Guid sessionID;
 
-            try
-            {
-                sessionID = cookieManager.GetSessionID(context.HttpContext);
-            } catch
-            {
-                context.Result = new BadRequestResult();
-                return;
-            }
+            sessionID = sessionParser.GetSessionID(context.HttpContext);
             
             if (sessionID == Guid.Empty)
             {
