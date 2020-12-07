@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.JSInterop;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,13 @@ namespace Tracker_Web.Services
     {
         private static string API_BASE_URI = "https://localhost:44391";
 
-        private HttpClient client;
+        private readonly HttpClient client;
+        private readonly IJSRuntime jsInterop;
 
-        public Consumer(HttpClient client)
+        public Consumer(HttpClient client, IJSRuntime jsInterop)
         {
             this.client = client;
+            this.jsInterop = jsInterop;
         }
 
         public async Task<(T, HttpStatusCode)> makeEmptyRequest<T>(MethodType method, string path)
@@ -53,6 +56,13 @@ namespace Tracker_Web.Services
 
         private async Task<(T, HttpStatusCode)> sendRequest<T>(HttpRequestMessage requestMsg, HttpClient client)
         {
+            // get session ID and add it to header if it exists
+            string sessionIDRaw = await jsInterop.InvokeAsync<string>("readCookie", args: new object[]
+                { "sessionID" });
+
+            requestMsg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                sessionIDRaw);
+
             var httpResponse = await client.SendAsync(requestMsg);
             string rawResponse = await httpResponse.Content.ReadAsStringAsync();
 

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject HttpClient http
 @inject NavigationManager navManager
+@inject IJSRuntime JSRuntime
 @using Model.Register
 
 <div class="container">
@@ -73,7 +74,7 @@
 
     protected override Task OnInitializedAsync()
     {
-        apiConsumer = new Consumer(http);
+        apiConsumer = new Consumer(http, JSRuntime);
         return base.OnInitializedAsync();
     }
 

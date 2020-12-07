@@ -60,7 +60,7 @@
 
     protected override Task OnInitializedAsync()
     {
-        apiConsumer = new Consumer(http);
+        apiConsumer = new Consumer(http, JSRuntime);
         return base.OnInitializedAsync();
     }
 
@@ -81,8 +81,10 @@
             case System.Net.HttpStatusCode.OK:
                 LoginOut responseBody = apiResponse.Item1;
                 await JSRuntime.InvokeVoidAsync("writeCookie", args: new Object[] 
-                    { "SessionId", responseBody.SessionId});
-                navManager.NavigateTo("Dashboard");
+                    { "sessionID", responseBody.SessionId});
+
+                navManager.NavigateTo("dashboard");
+                await OnInitializedAsync();
                 break;
             case System.Net.HttpStatusCode.Unauthorized:
                 errorMsg = "Email or Password is not correct";

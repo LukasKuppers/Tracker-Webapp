@@ -2,6 +2,7 @@
 @using Model
 @inject NavigationManager navManager
 @inject HttpClient http
+@inject IJSRuntime JSRuntime
 
 <div id="wrapper">
     @if (!isNoAuthPage)
@@ -51,7 +52,7 @@
         if (!isNoAuthPage)
         {
             // check if user is authorized
-            apiConsumer = new Consumer(http);
+            apiConsumer = new Consumer(http, JSRuntime);
 
             var apiResponse = await apiConsumer.makeEmptyRequest<AuthStatusOut>(MethodType.GET, "/api/authorization");
             var responseCode = apiResponse.Item2;
