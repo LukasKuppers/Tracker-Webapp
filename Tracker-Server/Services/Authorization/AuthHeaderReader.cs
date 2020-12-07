@@ -10,6 +10,11 @@ namespace Tracker_Server.Services.Authorization
 
         public Guid GetSessionID(HttpContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             var headers = context.Request.Headers;
             
             if (headers.TryGetValue(HEADER_KEY, out var authVal))

@@ -3,7 +3,7 @@ using System;
 
 namespace Tracker_Server.Services.Authorization
 {
-    interface ISessionParser
+    public interface ISessionParser
     {
         public Guid GetSessionID(HttpContext context);
     }
