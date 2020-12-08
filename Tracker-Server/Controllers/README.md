@@ -118,6 +118,33 @@ If successful, a JSON body of the following form is returned:
 - **200** if the request was successful and the users info was returned
 
 ### Projects API:
+
+`POST /api/projects`
+
+Creates a new project, where the owner is the user who made the request (user must be authenticated to create a project).
+Accetps a JSON body in the form:
+
+```
+{
+	"Title": "my special project"
+}
+```
+
+On success, the project ID is returned, having the following form. The project ID is also added to the users personal project list, which
+will be updated on the next call to the Users controller.
+
+```
+{
+	"Id": "7db7d2b7-6d33-4123-bc0c-a322e35adc13"
+}
+```
+
+#### Response Codes:
+- **400** if the request body is empty or malformed
+- **401** if the user is not authenticated
+- **201** if the Project was successfully created
+
+___
 `GET /api/projects/{projectId}`
 
 Get a specific project by its Id. The user must own the project or be a member of the project.
@@ -129,9 +156,9 @@ Example output for a valid request:
 	"Id": "7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
 	"Title": "My Project", 
 	"DateCreated": "01/10/2020", 
-	"Owner": "Melissa", 
-	"Members": [], 
-	"Tasks": []
+	"Owner": "3dd272c5-3a79-4b33-a3dd-216fcae8629df", 
+	"Members": [...], 
+	"Tasks": [...]
 }
 ```
 
