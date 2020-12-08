@@ -49,11 +49,34 @@ namespace Tracker_Server.Controllers
 
         [HttpPost]
         [AuthorizationFilter]
-        public ActionResult<PostProjOut> CreateProject()
+        public ActionResult<PostProjOut> CreateProject(PostProjIn projectTitle)
         {
-            User currentUser = (User) HttpContext.Items["currentUser"];
+            if (projectTitle == null || projectTitle.Title == "")
+            {
+                return BadRequest();
+            }
 
-            return Ok();
+            User currentUser = (User) HttpContext.Items["currentUser"];
+            Project project = new Project()
+            {
+                Id = Guid.NewGuid(),
+                Title = projectTitle.Title, 
+                DateCreated = DateTime.Now, 
+                Owner = currentUser.Id, 
+                Members = new List<Guid>(), 
+                Tasks = new List<Guid>()
+            };
+
+            IResource resources = new Resource();
+            IDbClient db = new DbClient(resources.GetString("db_base_path"));
+            db.InsertRecord(resources.GetString("db_projects_path"), project);
+
+            PostProjOut responseBody = new PostProjOut()
+            {
+                Id = project.Id
+            };
+
+            return CreatedAtAction("createProject", responseBody);
         }
     }
 }
