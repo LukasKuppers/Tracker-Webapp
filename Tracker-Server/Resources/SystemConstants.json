@@ -2,6 +2,7 @@
   "db_base_path": "tracker",
   "db_users_path": "users",
   "db_sessions_path": "sessions",
+  "db_projects_path": "projects",
   "cookies_session_key": "sessionID", 
   "action_context_user_key": "currentUser"
 }
