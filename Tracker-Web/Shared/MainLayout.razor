@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @using Model
+@using Model.User 
 @inject NavigationManager navManager
 @inject HttpClient http
 @inject IJSRuntime JSRuntime
@@ -21,6 +22,13 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" @onclick="ToggleSidebar">
                         <i class="fa fa-bars"></i>
                     </button>
+                    <ul class="navbar-nav ml-auto">
+                        <li>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                @currentUser.Username
+                            </span>
+                        </li>
+                    </ul>
                     } else
                     {
                     <div class="navbar-brand text-primary">Tracker</div>
@@ -65,12 +73,28 @@
                     await OnInitializedAsync();
                     return;
             }
+
+            // get user
+            var userResponse = await apiConsumer.makeEmptyRequest<User>(MethodType.GET, "/api/users/current");
+            var userResponseCode = apiResponse.Item2;
+            if (userResponseCode == System.Net.HttpStatusCode.OK)
+            {
+                currentUser = userResponse.Item1;
+            }
+            else
+            {
+                navManager.NavigateTo("login");
+                await OnInitializedAsync();
+                return;
+            }
         }
 
         await base.OnInitializedAsync();
     }
 
     private Consumer apiConsumer;
+
+    private User currentUser = new User();
 
     private bool sidebarHidden = false;
     private bool isNoAuthPage;
