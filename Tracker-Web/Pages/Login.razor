@@ -83,7 +83,7 @@
                 await JSRuntime.InvokeVoidAsync("writeCookie", args: new Object[] 
                     { "sessionID", responseBody.SessionId});
 
-                navManager.NavigateTo("dashboard");
+                navManager.NavigateTo("dashboard", forceLoad: true);
                 await OnInitializedAsync();
                 break;
             case System.Net.HttpStatusCode.Unauthorized:

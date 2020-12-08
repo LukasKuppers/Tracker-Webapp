@@ -59,6 +59,10 @@ namespace Tracker_Web.Services
             // get session ID and add it to header if it exists
             string sessionIDRaw = await jsInterop.InvokeAsync<string>("readCookie", args: new object[]
                 { "sessionID" });
+            if (sessionIDRaw == null || sessionIDRaw == "")
+            {
+                sessionIDRaw = "none";
+            }
 
             requestMsg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
                 sessionIDRaw);
