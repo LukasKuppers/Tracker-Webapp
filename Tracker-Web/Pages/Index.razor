@@ -88,7 +88,7 @@
             Password = registerForm.Password
         };
 
-        var apiResponse = await apiConsumer.makeRequest<RegisterIn, RegisterIn>(MethodType.POST, "/api/authorization", body);
+        var apiResponse = await apiConsumer.MakeRequest<RegisterIn, RegisterIn>(MethodType.POST, "/api/authorization", body);
         var responseCode = apiResponse.Item2;
 
         switch (responseCode)

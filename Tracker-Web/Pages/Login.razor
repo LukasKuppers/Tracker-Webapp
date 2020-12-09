@@ -73,7 +73,7 @@
             Password = loginForm.Password
         };
 
-        var apiResponse = await apiConsumer.makeRequest<LoginOut, LoginIn>(MethodType.PUT, "/api/authorization", requestBody);
+        var apiResponse = await apiConsumer.MakeRequest<LoginOut, LoginIn>(MethodType.PUT, "/api/authorization", requestBody);
         var responseCode = apiResponse.Item2;
 
         switch (responseCode)

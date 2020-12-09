@@ -62,7 +62,7 @@
             // check if user is authorized
             apiConsumer = new Consumer(http, JSRuntime);
 
-            var apiResponse = await apiConsumer.makeEmptyRequest<AuthStatusOut>(MethodType.GET, "/api/authorization");
+            var apiResponse = await apiConsumer.MakeEmptyRequest<AuthStatusOut>(MethodType.GET, "/api/authorization");
             var responseCode = apiResponse.Item2;
             switch (responseCode)
             {
@@ -75,7 +75,7 @@
             }
 
             // get user
-            var userResponse = await apiConsumer.makeEmptyRequest<User>(MethodType.GET, "/api/users/current");
+            var userResponse = await apiConsumer.MakeEmptyRequest<User>(MethodType.GET, "/api/users/current");
             var userResponseCode = apiResponse.Item2;
             if (userResponseCode == System.Net.HttpStatusCode.OK)
             {

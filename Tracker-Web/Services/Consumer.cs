@@ -10,15 +10,7 @@ using System.Threading.Tasks;
 
 namespace Tracker_Web.Services
 {
-    public enum MethodType
-    {
-        GET, 
-        PUT, 
-        POST, 
-        DELETE
-    }
-
-    public class Consumer
+    public class Consumer : IApiConsumer
     {
         private static string API_BASE_URI = "https://localhost:44391";
 
@@ -31,7 +23,7 @@ namespace Tracker_Web.Services
             this.jsInterop = jsInterop;
         }
 
-        public async Task<(T, HttpStatusCode)> makeEmptyRequest<T>(MethodType method, string path)
+        public async Task<(T, HttpStatusCode)> MakeEmptyRequest<T>(MethodType method, string path)
         {
             var requestMsg = new HttpRequestMessage()
             {
@@ -39,10 +31,10 @@ namespace Tracker_Web.Services
                 RequestUri = new Uri(API_BASE_URI + path)
             };
 
-            return await sendRequest<T>(requestMsg, client);
+            return await SendRequest<T>(requestMsg, client);
         }
 
-        public async Task<(T, HttpStatusCode)> makeRequest<T, U>(MethodType method, string path, U body)
+        public async Task<(T, HttpStatusCode)> MakeRequest<T, U>(MethodType method, string path, U body)
         {
             var requestMsg = new HttpRequestMessage()
             {
@@ -51,10 +43,10 @@ namespace Tracker_Web.Services
                 RequestUri = new Uri(API_BASE_URI + path)
             };
 
-            return await sendRequest<T>(requestMsg, client);
+            return await SendRequest<T>(requestMsg, client);
         }
 
-        private async Task<(T, HttpStatusCode)> sendRequest<T>(HttpRequestMessage requestMsg, HttpClient client)
+        private async Task<(T, HttpStatusCode)> SendRequest<T>(HttpRequestMessage requestMsg, HttpClient client)
         {
             // get session ID and add it to header if it exists
             string sessionIDRaw = await jsInterop.InvokeAsync<string>("readCookie", args: new object[]
