@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using Model
 @using Model.User 
+@using Services.EndpointConsumers 
 @inject NavigationManager navManager
 @inject HttpClient http
 @inject IJSRuntime JSRuntime
@@ -60,39 +61,19 @@
         if (!isNoAuthPage)
         {
             // check if user is authorized
-            apiConsumer = new Consumer(http, JSRuntime);
-
-            var apiResponse = await apiConsumer.MakeEmptyRequest<AuthStatusOut>(MethodType.GET, "/api/authorization");
-            var responseCode = apiResponse.Item2;
-            switch (responseCode)
-            {
-                case System.Net.HttpStatusCode.OK:
-                    break;
-                default:
-                    navManager.NavigateTo("login");
-                    await OnInitializedAsync();
-                    return;
-            }
+            authApi = new AuthConsumer(http, JSRuntime, navManager);
+            await authApi.CheckAuth();
 
             // get user
-            var userResponse = await apiConsumer.MakeEmptyRequest<User>(MethodType.GET, "/api/users/current");
-            var userResponseCode = apiResponse.Item2;
-            if (userResponseCode == System.Net.HttpStatusCode.OK)
-            {
-                currentUser = userResponse.Item1;
-            }
-            else
-            {
-                navManager.NavigateTo("login");
-                await OnInitializedAsync();
-                return;
-            }
+            usersApi = new UsersConsumer(http, JSRuntime, navManager);
+            currentUser = await usersApi.GetCurrent();   
         }
 
         await base.OnInitializedAsync();
     }
 
-    private Consumer apiConsumer;
+    private UsersConsumer usersApi;
+    private AuthConsumer authApi;
 
     private User currentUser = new User();
 

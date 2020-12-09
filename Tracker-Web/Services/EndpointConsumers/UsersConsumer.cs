@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Tracker_Web.Model.User;
 
-namespace Tracker_Web.Services
+namespace Tracker_Web.Services.EndpointConsumers
 {
     public class UsersConsumer
     {

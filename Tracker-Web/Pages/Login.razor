@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @using Model.Login
+@using Services.EndpointConsumers 
 @inject HttpClient http
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navManager
@@ -54,13 +55,13 @@
 
     private LoginForm loginForm = new LoginForm();
 
-    private Consumer apiConsumer;
+    private AuthConsumer authApi;
 
     private string errorMsg = "";
 
     protected override Task OnInitializedAsync()
     {
-        apiConsumer = new Consumer(http, JSRuntime);
+        authApi = new AuthConsumer(http, JSRuntime, navManager);
         return base.OnInitializedAsync();
     }
 
@@ -73,25 +74,18 @@
             Password = loginForm.Password
         };
 
-        var apiResponse = await apiConsumer.MakeRequest<LoginOut, LoginIn>(MethodType.PUT, "/api/authorization", requestBody);
-        var responseCode = apiResponse.Item2;
+        string sessionId = await authApi.Login(requestBody);
 
-        switch (responseCode)
+        if (sessionId == null)
         {
-            case System.Net.HttpStatusCode.OK:
-                LoginOut responseBody = apiResponse.Item1;
-                await JSRuntime.InvokeVoidAsync("writeCookie", args: new Object[] 
-                    { "sessionID", responseBody.SessionId});
-
-                navManager.NavigateTo("dashboard", forceLoad: true);
-                await OnInitializedAsync();
-                break;
-            case System.Net.HttpStatusCode.Unauthorized:
-                errorMsg = "Email or Password is not correct";
-                break;
-            default:
-                errorMsg = "An Unhandled error has occured";
-                return;
+            errorMsg = "Email or Password is not correct";
+            return;
         }
+
+        await JSRuntime.InvokeVoidAsync("writeCookie", args: new Object[]
+            { "sessionID", sessionId });
+
+        navManager.NavigateTo("dashboard", forceLoad: true);
+        return;
     }
 }
