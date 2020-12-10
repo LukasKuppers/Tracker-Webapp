@@ -49,7 +49,7 @@ namespace Tracker_Web.Services.EndpointConsumers
                 return null;
             }
 
-            var response = await api.MakeEmptyRequest<GetListOut>(MethodType.GET, "/api/projects/list" + userId.ToString());
+            var response = await api.MakeEmptyRequest<GetListOut>(MethodType.GET, "/api/projects/list/" + userId.ToString());
             var code = response.Item2;
 
             switch(code)
