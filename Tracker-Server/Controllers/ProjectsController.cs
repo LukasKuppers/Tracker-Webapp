@@ -111,6 +111,10 @@ namespace Tracker_Server.Controllers
             IDbClient db = new DbClient(resources.GetString("db_base_path"));
             db.InsertRecord(resources.GetString("db_projects_path"), project);
 
+            var projects = currentUser.Projects;
+            projects.Add(project.Id);
+            db.UpdateRecord<User, List<Guid>>(resources.GetString("db_users_path"), currentUser.Id, "Projects", projects);
+
             PostProjOut responseBody = new PostProjOut()
             {
                 Id = project.Id
