@@ -172,7 +172,7 @@ The `Members` and `Tasks` properties should be lists containing user ID's and ta
 - **401** if the user is not logged in
 
 ___
-`GET /api/projects/{userId}`
+`GET /api/projects/list/{userId}`
  
  Gets a list of all the projects that the specified user is a member of, or is the owner of. While the specified user must not be the same user that is making the request, 
  this endpoint still requires that the client be logged in. The request does not require a JSON body.
