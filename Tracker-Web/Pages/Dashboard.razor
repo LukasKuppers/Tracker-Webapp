@@ -1,9 +1,25 @@
 ﻿@page "/dashboard"
+@using Tracker_Web.Components
+@using Model.User
+@using Services.EndpointConsumers
+@inject HttpClient http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navManager
 
 <h3>Dashboard</h3>
 
-<Tracker_Web.Components.ProjectList />
+<ProjectList userId="@currentUser.Id" />
 
 @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+        usersApi = new UsersConsumer(http, JSRuntime, navManager);
+        currentUser = await usersApi.GetCurrent();
+
+        return;
+    }
+
+    private UsersConsumer usersApi;
+    public User currentUser = new User();
 }

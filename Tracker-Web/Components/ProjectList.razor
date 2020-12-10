@@ -7,20 +7,26 @@
 
 <h4>Projects</h4>
 <div class="row">
-    @currentUser.Email
+    @foreach (Project proj in projects)
+    {
+    <div class="col-xl-3 col-md-6 col-mb-4">
+        <ProjectCard project="@proj"/>
+    </div>
+    }
 </div>
 
-@code {        
-    protected override async Task OnInitializedAsync()
-    {
-        usersApi = new UsersConsumer(http, JSRuntime, navManager);
-        currentUser = await usersApi.GetCurrent();
+@code {
 
-        return;
+    protected override async Task OnParametersSetAsync()
+    {
+        projectsApi = new ProjectsConsumer(http, JSRuntime);
+        projects = await projectsApi.GetList(userId);
     }
 
-    private UsersConsumer usersApi;
+    [Parameter]
+    public Guid userId { get; set; }
 
-    private User currentUser = new User();
+    private ProjectsConsumer projectsApi;
+
     private List<Project> projects = new List<Project>();
 }

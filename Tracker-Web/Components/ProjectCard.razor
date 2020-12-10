@@ -9,24 +9,22 @@
     <div class="card-body">
         <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                <div class="h6 font-weight-bold text-primary text-uppercase mb-1">
                     @project.Title
                 </div>
-                <div class="h6 mb-0 font-weight-bold text-gray-800">
+                <div class="text-xs mb-0 font-weight-bold text-gray-800">
                     Owner: @owner.Username
                 </div>
             </div>
             <div class="col-auto">
-                <i class="fas fa-folder fa-2x text-gray-300">
-                    ::before
-                </i>
+                <i class="fas fa-folder fa-2x text-gray-300"></i>
             </div>
         </div>
     </div>
 </div>
 
 @code {        
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         UsersConsumer userApi = new UsersConsumer(http, JSRuntime, navManager);
         owner = await userApi.GetById(project.Owner);

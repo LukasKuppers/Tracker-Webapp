@@ -46,7 +46,7 @@ namespace Tracker_Web.Services.EndpointConsumers
         {
             if (userId == Guid.Empty)
             {
-                return null;
+                return new List<Project>();
             }
 
             var response = await api.MakeEmptyRequest<GetListOut>(MethodType.GET, "/api/projects/list/" + userId.ToString());
@@ -71,7 +71,7 @@ namespace Tracker_Web.Services.EndpointConsumers
                     }
                     return list;
                 default:
-                    return null;
+                    return new List<Project>();
             }
         }
 
