@@ -47,6 +47,46 @@ namespace Tracker_Server.Controllers
             return NotFound();
         }
 
+        [HttpGet("list/{userId}")]
+        [AuthorizationFilter]
+        public ActionResult<GetProjsOut> GetProjects(string userId)
+        {
+            if (userId == null || userId == "")
+            {
+                return BadRequest();
+            }
+
+            bool success = Guid.TryParse(userId, out Guid id);
+            if (!success)
+            {
+                return BadRequest();
+            }
+
+            IResource resources = new Resource();
+            IDbClient db = new DbClient(resources.GetString("db_base_path"));
+
+            if (db.Contains<User, Guid>(resources.GetString("db_users_path"), "_id", id))
+            {
+                User user = db.FindByField<User, Guid>(resources.GetString("db_users_path"), "_id", id)[0];
+                var projects = user.Projects;
+                GetProjsOut response = new GetProjsOut() { Projects = new List<ProjectMinimal>() };
+                foreach(Guid projId in projects)
+                {
+                    Project project = db.FindByField<Project, Guid>(resources.GetString("db_projects_path"), "_id", projId)[0];
+                    ProjectMinimal item = new ProjectMinimal()
+                    {
+                        Id = projId,
+                        Title = project.Title,
+                        DateCreated = project.DateCreated,
+                        Owner = project.Owner
+                    };
+                    response.Projects.Add(item);
+                }
+                return Ok(response);
+            }
+            return NotFound();
+        }
+
         [HttpPost]
         [AuthorizationFilter]
         public ActionResult<PostProjOut> CreateProject(PostProjIn projectTitle)
