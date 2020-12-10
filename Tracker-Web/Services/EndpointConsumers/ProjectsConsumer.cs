@@ -41,6 +41,39 @@ namespace Tracker_Web.Services.EndpointConsumers
                     return null;
             }
         }
+        
+        public async Task<List<Project>> GetList(Guid userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                return null;
+            }
+
+            var response = await api.MakeEmptyRequest<GetListOut>(MethodType.GET, "/api/projects/list" + userId.ToString());
+            var code = response.Item2;
+
+            switch(code)
+            {
+                case System.Net.HttpStatusCode.OK:
+                    List<Project> list = new List<Project>();
+                    foreach(var minProj in response.Item1.Projects)
+                    {
+                        Project proj = new Project()
+                        {
+                            Id = minProj.Id,
+                            Title = minProj.Title,
+                            DateCreated = minProj.DateCreated,
+                            Owner = minProj.Owner,
+                            Members = new List<Guid>(),
+                            Tasks = new List<Guid>()
+                        };
+                        list.Add(proj);
+                    }
+                    return list;
+                default:
+                    return null;
+            }
+        }
 
         public async Task<Guid> CreateProject(string title)
         {
