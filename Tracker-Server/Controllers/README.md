@@ -165,7 +165,41 @@ Example output for a valid request:
 The `Members` and `Tasks` properties should be lists containing user ID's and task ID's, respectively.
 
 #### Response Codes:
+- **200** if the request was successful
 - **400** if the given projectID is empty or malformed
 - **403** if the user is not the owner or a member of the project
 - **404** if no project exists with the given projectId
 - **401** if the user is not logged in
+
+___
+`GET /api/projects/{userId}`
+ 
+ Gets a list of all the projects that the specified user is a member of, or is the owner of. While the specified user must not be the same user that is making the request, 
+ this endpoint still requires that the client be logged in. The request does not require a JSON body.
+ 
+ Example output for a valid request:
+ ```
+ {
+ 	"Projects": [
+		{
+			"Id": "7db7d2b7-6d33-4123-bc0c-a322e35adc13", 
+			"Title": "my project", 
+			"DateCreated": "01/10/2020", 
+			"Owner": "3dd272c5-3a79-4b33-a3dd-216fcae8629df"
+		}, 
+		...
+	]
+ }
+ ```
+Note that the projects within the list exlude the list of tasks and members for each project. This is to reduce the size of requests, since projects may contain may
+members and/or tasks.
+
+#### Response Codes:
+- **200** if the provided userID is valid, and the client has provided a valid session ID
+- **400** if the provided userID is null or malformed
+- **404** if the userID is of correct format, but no user with the specified ID exists
+
+
+
+
+
