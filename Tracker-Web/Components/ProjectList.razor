@@ -5,7 +5,10 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navManager;
 
-<h4>Projects</h4>
+<div class="d-flex justify-content-between">
+    <h4>Projects</h4>
+    <NewProjectModal />
+</div>
 <div class="row">
     @foreach (Project proj in projects)
     {
