@@ -145,6 +145,19 @@ will be updated on the next call to the Users controller.
 - **201** if the Project was successfully created
 
 ___
+`DELETE /api/projects/{projectID}`
+
+Delete a specific project by its Id. The user making the request must be the owner of the project to delete it.
+Does not require a JSON body.
+
+#### Response Codes:
+- **204** if the request was successful, and the project is deleted
+- **404** if the specified project does not exist
+- **403** if the user does not own the project they wish to delete
+- **400** if the given projectID is empty or malformed
+- **401** if the user is not logged in
+
+___
 `GET /api/projects/{projectId}`
 
 Get a specific project by its Id. The user must own the project or be a member of the project.
