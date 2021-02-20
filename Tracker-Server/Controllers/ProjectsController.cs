@@ -122,5 +122,51 @@ namespace Tracker_Server.Controllers
 
             return CreatedAtAction("createProject", responseBody);
         }
+
+        [HttpDelete("{projectID}")]
+        [AuthorizationFilter]
+        public ActionResult DeleteProject(string projectID)
+        {
+            bool success = Guid.TryParse(projectID, out Guid id);
+            if (!success)
+            {
+                return BadRequest();
+            }
+
+            User currentUser = (User) HttpContext.Items["currentUser"];
+            IResource resources = new Resource();
+            IDbClient db = new DbClient(resources.GetString("db_base_path"));
+
+            if (db.Contains<Project, Guid>(resources.GetString("db_projects_path"), "_id", id))
+            {
+                Project proj = db.FindByField<Project, Guid>(resources.GetString("db_projects_path"), "_id", id)[0];
+                if (!proj.Owner.Equals(currentUser.Id))
+                {
+                    return Forbid();
+                }
+
+                // remove project reference from all included members
+
+                foreach (Guid userId in proj.Members)
+                {
+                    User member = db.FindByField<User, Guid>(resources.GetString("db_users_path"), "_id", userId)[0];
+                    List<Guid> projects = member.Projects;
+                    projects.Remove(proj.Id);
+                    db.UpdateRecord<User, List<Guid>>(resources.GetString("db_users_path"), userId, "Projects", projects);
+                }
+
+                List<Guid> userProjects = currentUser.Projects;
+                userProjects.Remove(proj.Id);
+                db.UpdateRecord<User, List<Guid>>(resources.GetString("db_users_path"), currentUser.Id, "Projects", userProjects);
+
+                // deleete project
+                db.DeleteRecord<Project>(resources.GetString("db_projects_path"), proj.Id);
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
