@@ -2,26 +2,38 @@
 @page "/projects/{projId}"
 @using Tracker_Web.Components
 @using Model.User
+@using Model.Project
 @using Services.EndpointConsumers
 @inject HttpClient http
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navManager
 
-<h1 class="h3 mb-0 text-gray-800">Projects</h1>
-
-project ID: @projId
+<div class="row justify-content-start">
+    <h1 class="h3 mb-0 text-gray-800">Projects | </h1>
+    <div class="dropdown" style="margin-left:1em">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @currentProject.Title
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            @foreach (Project proj in projects)
+            {
+                <button class="dropdown-item" type="button" @onclick="() => SelectProject(proj.Id.ToString())">@proj.Title</button>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
 
     protected override async Task OnInitializedAsync()
     {
         usersApi = new UsersConsumer(http, JSRuntime, navManager);
-        currentUser = await usersApi.GetCurrent();
+        projApi = new ProjectsConsumer(http, JSRuntime);
 
-        if (projId == null || projId == "")
-        {
-            projId = "no ID specified";
-        }
+        currentUser = await usersApi.GetCurrent();
+        projects = await projApi.GetList(currentUser.Id);
+
+        ConfigureCurrentProject();
 
         return;
     }
@@ -31,4 +43,34 @@ project ID: @projId
 
     private UsersConsumer usersApi;
     public User currentUser = new User();
+
+    private ProjectsConsumer projApi;
+    private List<Project> projects = new List<Project>();
+
+    private Project currentProject = new Project();
+
+    private void ConfigureCurrentProject()
+    {
+        if (projId == null || projId == "")
+        {
+            currentProject = projects.First();
+        }
+        else
+        {
+            foreach (Project proj in projects)
+            {
+                if (proj.Id.ToString() == projId)
+                {
+                    currentProject = proj;
+                }
+            }
+        }
+    }
+
+    private void SelectProject(string id)
+    {
+        string url = "projects/";
+        url += id;
+        navManager.NavigateTo(url, forceLoad: true);
+    }
 }
