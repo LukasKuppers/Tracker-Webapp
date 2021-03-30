@@ -1,11 +1,15 @@
 ﻿# API Documentation
-NOTE: very early specification
 
 A comprehensive list of all the endpoints provided by the back end. Endpoints should only be accesible if the client sends 
 their session ID in the authorization header. The session ID is provided by the server in the request body of the
 `PUT /api/authorization` call, if the provided credentials are valid.
 
-### Authorization API:
+### Table of Contents:
+- [Authorization](#authorization-api)
+- [Users](#users-api)
+- [Projects](#projects-api)
+
+### Authorization API
 `Get /api/authorization`
 
 Asks the server if the user is authorized. No JSON body is required, but a valid user will have their correct session ID in the requests auth header.
@@ -72,7 +76,7 @@ If the request is successful, it will return the same JSON body as in the reques
 - **409** if a user with the specified Email Address already exists
 - **201** if the registration was successful - returns user info
 
-### Users API:
+### Users API
 `GET /api/users/current`
 
 Get a the current user info. Note that this requires that the user is logged in with a valid session, where the server-provided sessionID is provided in the request header - goto top of docs to see sessionID requirements.
@@ -117,7 +121,7 @@ If successful, a JSON body of the following form is returned:
 - **404** if no user with the specified Id exists
 - **200** if the request was successful and the users info was returned
 
-### Projects API:
+### Projects API
 
 `POST /api/projects`
 
