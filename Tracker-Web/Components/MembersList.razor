@@ -1,0 +1,50 @@
+﻿@using Tracker_Web.Model.User;
+@using Services.EndpointConsumers
+@inject HttpClient http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navManager;
+
+<div class="card shadow">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-secondary">Members</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach (string name in names)
+            {
+                <span class="badge bg-primary">@name</span>
+            }
+        </div>
+        @if (names.Count == 0)
+        {
+            <div>You haven't added any members to this project yet!</div>
+        }
+    </div>
+</div>
+
+@code {
+
+    protected override async Task OnParametersSetAsync()
+    {
+        UsersConsumer usersApi = new UsersConsumer(http, JSRuntime, navManager);
+        names = await GetNames(members, usersApi);
+
+        return;
+    }
+
+    [Parameter]
+    public List<Guid> members { get; set; }
+
+    private List<string> names = new List<String>();
+
+    private async Task<List<string>> GetNames(List<Guid> members, UsersConsumer usersApi)
+    {
+        List<string> names = new List<string>();
+        foreach(Guid userId in members)
+        {
+            User user = await usersApi.GetById(userId);
+            names.Add(user.Username);
+        }
+        return names;
+    }
+}

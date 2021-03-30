@@ -23,12 +23,19 @@
     </div>
 </div>
 
+<div style="margin-top:1em">
+    <MembersList members="@currentProject.Members" />
+</div>
+
+
 @code {
 
     protected override async Task OnInitializedAsync()
     {
         usersApi = new UsersConsumer(http, JSRuntime, navManager);
         projApi = new ProjectsConsumer(http, JSRuntime);
+
+        currentProject.Members = new List<Guid>();
 
         currentUser = await usersApi.GetCurrent();
         projects = await projApi.GetList(currentUser.Id);
