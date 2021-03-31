@@ -7,14 +7,22 @@
 
 <div class="d-flex justify-content-between">
     <h4>Projects</h4>
-    <NewProjectModal />
+    @if (projects.Count > 0)
+    {
+        <NewProjectModal />
+    }
 </div>
-<div class="row">
+<div class="row" style="margin-top:1em">
     @foreach (Project proj in projects)
     {
-    <div class="col-xl-3 col-md-6 col-mb-4">
-        <ProjectCard project="@proj"/>
-    </div>
+        <div class="col-xl-3 col-md-6 col-mb-4">
+            <ProjectCard project="@proj"/>
+        </div>
+    }
+
+    @if (projects.Count == 0)
+    {
+        <NoProjectsMessage/>
     }
 </div>
 
