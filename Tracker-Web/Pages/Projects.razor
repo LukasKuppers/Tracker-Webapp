@@ -8,17 +8,26 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navManager
 
-<div class="row justify-content-start">
-    <h1 class="h3 mb-0 text-gray-800">Projects | </h1>
-    <div class="dropdown" style="margin-left:1em">
-        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            @currentProject.Title
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            @foreach (Project proj in projects)
-            {
-                <button class="dropdown-item" type="button" @onclick="() => SelectProject(proj.Id.ToString())">@proj.Title</button>
-            }
+<div class="row">
+    <div class="col">
+        <div class="row justify-content-start">
+            <h1 class="h3 mb-0 text-gray-800">Projects | </h1>
+            <div class="dropdown" style="margin-left:1em">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @currentProject.Title
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach (Project proj in projects)
+                    {
+                        <button class="dropdown-item" type="button" @onclick="() => SelectProject(proj.Id.ToString())">@proj.Title</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="row justify-content-end">
+            <DeleteProjectModal project="@currentProject"/>
         </div>
     </div>
 </div>
@@ -58,19 +67,16 @@
 
     private void ConfigureCurrentProject()
     {
-        if (projId == null || projId == "")
+        foreach (Project proj in projects)
         {
-            currentProject = projects.First();
-        }
-        else
-        {
-            foreach (Project proj in projects)
+            if (proj.Id.ToString() == projId)
             {
-                if (proj.Id.ToString() == projId)
-                {
-                    currentProject = proj;
-                }
+                currentProject = proj;
             }
+        }
+        if (currentProject.Title == null)
+        {
+            navManager.NavigateTo("dashboard", forceLoad: true);
         }
     }
 

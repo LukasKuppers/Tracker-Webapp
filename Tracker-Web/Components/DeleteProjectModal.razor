@@ -1,0 +1,49 @@
+﻿@using Model.Project
+@using Services.EndpointConsumers
+@inject HttpClient http
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navManager
+
+<button type="button" class="btn btn-danger btn-user" data-toggle="modal" data-target="#deleteProjectModal">
+    <i class="fas fa-sm fa-trash"></i>
+    Delete Project
+</button>
+
+<div class="modal fade" id="deleteProjectModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newProjectModalLabel">Delete Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the project '@(project == null ? "" : project.Title)'? All of its information, including progress and tasks will be lost forever.
+                <form class="user" style="margin-top:3em">
+                    <button class="btn btn-danger btn-user btn-block" @onclick="DeleteProject">Delete Project</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    protected override Task OnInitializedAsync()
+    {
+        projApi = new ProjectsConsumer(http, JSRuntime);
+        return base.OnInitializedAsync();
+    }
+
+    [Parameter]
+    public Project project { get; set; }
+
+    private ProjectsConsumer projApi;
+
+    private async Task DeleteProject()
+    {
+        await projApi.DeleteProject(project.Id);
+        navManager.NavigateTo("projects/", forceLoad:true);
+    }
+}

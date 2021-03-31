@@ -96,5 +96,16 @@ namespace Tracker_Web.Services.EndpointConsumers
                     return Guid.Empty;
             }
         }
+
+        public async Task DeleteProject(Guid id)
+        {
+            if (id == null || id.Equals(Guid.Empty))
+            {
+                throw new ArgumentNullException("Provided project ID is null or empty");
+            }
+
+            string path = "/api/projects/" + id.ToString();
+            await api.MakeEmptyRequest<int>(MethodType.DELETE, path);
+        }
     }
 }
