@@ -76,7 +76,14 @@
         }
         if (currentProject.Title == null)
         {
-            navManager.NavigateTo("dashboard", forceLoad: true);
+            if (projects.Count > 0)
+            {
+                currentProject = projects[0];
+            }
+            else
+            {
+                navManager.NavigateTo("dashboard", forceLoad: true);
+            }
         }
     }
 
